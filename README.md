@@ -52,7 +52,7 @@ Proyek ini dilisensikan di bawah MIT License.
 📬 Kontak
 Jika Anda memiliki pertanyaan, saran, atau ingin ngobrol lebih lanjut, jangan ragu untuk menghubungi saya!
 
-Nama Anda - email@example.com
+Nama Anda - raffryrizqullah@gmail.com
 
 🎨 Teknologi yang Digunakan
 - HTML: Struktur halaman web.
