@@ -5,7 +5,7 @@ Selamat datang di **Chatbot ITSupport UII**! 🎉 Proyek ini adalah chatbot inte
 ## 🌟 Fitur Utama
 - **Interaksi Real-time**: Tanya jawab langsung dengan chatbot yang responsif.
 - **Desain Menarik**: Dengan video latar belakang dan antarmuka yang ramah pengguna.
-- **Dukungan Format Pesan**: Gunakan **bold** dan tautan klik untuk memperjelas pesan Anda.
+- **Dukungan Format Pesan**: **FORMAT** pesan yang sangat rapih dan ramah untuk antarmuka.
 
 ## 📚 Tabel Konten
 - [Instalasi](#instalasi)
