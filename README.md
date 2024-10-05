@@ -1,20 +1,20 @@
-##### 🤖 Chatbot ITSupport UII
+## 🤖 Chatbot ITSupport UII
 
 Selamat datang di **Chatbot ITSupport UII**! 🎉 Proyek ini adalah chatbot interaktif yang dirancang untuk membantu pengguna dengan pertanyaan seputar layanan IT di UII. Dengan tampilan yang modern dan interaksi yang mudah, chatbot ini siap membantu Anda kapan saja!
 
-#### 🌟 Fitur Utama
+## 🌟 Fitur Utama
 - **Interaksi Real-time**: Tanya jawab langsung dengan chatbot yang responsif.
 - **Desain Menarik**: Dengan video latar belakang dan antarmuka yang ramah pengguna.
 - **Dukungan Format Pesan**: Gunakan **bold** dan tautan klik untuk memperjelas pesan Anda.
 
-#### 📚 Tabel Konten
+## 📚 Tabel Konten
 - [Instalasi](#instalasi)
 - [Penggunaan](#penggunaan)
 - [Kontribusi](#kontribusi)
 - [Lisensi](#lisensi)
 - [Kontak](#kontak)
 
-#### 🛠️ Instalasi
+## 🛠️ Instalasi
 
 Siap untuk memulai? Ikuti langkah-langkah di bawah ini! 🚀
 
@@ -30,7 +30,7 @@ Siap untuk memulai? Ikuti langkah-langkah di bawah ini! 🚀
    ```bash
    pip install -r requirements.txt
 
-#### 🎮 Penggunaan
+## 🎮 Penggunaan
 Mau tahu cara menggunakan chatbot ini? Simak langkah-langkah berikut! 📖
 
 1. Jalankan server backend (misalnya, jika menggunakan Flask):
@@ -55,10 +55,10 @@ Jika Anda memiliki pertanyaan, saran, atau ingin ngobrol lebih lanjut, jangan ra
 Nama Anda - email@example.com
 
 🎨 Teknologi yang Digunakan
-HTML: Struktur halaman web.
-CSS: Gaya dan tata letak halaman.
-JavaScript: Logika interaktif untuk chatbot.
-Python: Backend untuk pengolahan data dan logika chatbot (misalnya, menggunakan Flask).
+- HTML: Struktur halaman web.
+- CSS: Gaya dan tata letak halaman.
+- JavaScript: Logika interaktif untuk chatbot.
+- Python: Backend untuk pengolahan data dan logika chatbot (misalnya, menggunakan Flask).
 
 
 
