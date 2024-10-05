@@ -5,7 +5,7 @@ Selamat datang di **Chatbot ITSupport UII**! 🎉 Proyek ini adalah chatbot inte
 ## 🌟 Fitur Utama
 - **Interaksi Real-time**: Tanya jawab langsung dengan chatbot yang responsif.
 - **Desain Menarik**: Dengan video latar belakang dan antarmuka yang ramah pengguna.
-- **Dukungan Format Pesan**: **FORMAT** pesan yang sangat rapih dan ramah untuk antarmuka.
+- **Dukungan Format Pesan**: Sangat rapih dan ramah untuk antarmuka.
 
 ## 📚 Tabel Konten
 - [Instalasi](#instalasi)
@@ -40,21 +40,22 @@ Mau tahu cara menggunakan chatbot ini? Simak langkah-langkah berikut! 📖
 3. Buka browser Anda dan kunjungi http://localhost:5000 untuk mulai menggunakan chatbot! ✨
 
 
-💡 Kontribusi
+## 💡 Kontribusi
 Kami senang jika Anda ingin berkontribusi! 🤗
 
-Fork repositori ini
-Buat perubahan yang Anda inginkan
-Kirimkan pull request untuk dibahas
-📝 Lisensi
-Proyek ini dilisensikan di bawah MIT License.
+- Fork repositori ini
+- Buat perubahan yang Anda inginkan
+- Kirimkan pull request untuk dibahas
 
-📬 Kontak
+## 📝 Lisensi
+Proyek ini dilisensikan di bawah MIT License. 🤞🫣
+
+## 📬 Kontak
 Jika Anda memiliki pertanyaan, saran, atau ingin ngobrol lebih lanjut, jangan ragu untuk menghubungi saya!
 
 Nama Anda - raffryrizqullah@gmail.com
 
-🎨 Teknologi yang Digunakan
+## 🎨 Teknologi yang Digunakan
 - HTML: Struktur halaman web.
 - CSS: Gaya dan tata letak halaman.
 - JavaScript: Logika interaktif untuk chatbot.
