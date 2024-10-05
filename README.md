@@ -23,19 +23,21 @@ Siap untuk memulai? Ikuti langkah-langkah di bawah ini! 🚀
    git clone https://github.com/USERNAME/chatbot.git
    
 2. Masuk ke direktori proyek:
-    cd chatbot
+   ```bash
+   cd chatbot
 
-3. Install dependensi (jika diperlukan):
-    # Contoh jika menggunakan Flask (misalnya)
-      pip install -r requirements.txt
+4. Install dependensi (jika diperlukan):
+   ```bash
+   pip install -r requirements.txt
 
 🎮 Penggunaan
 Mau tahu cara menggunakan chatbot ini? Simak langkah-langkah berikut! 📖
 
 1. Jalankan server backend (misalnya, jika menggunakan Flask):
-    python app.py
+   ```bash
+   python app.py
 
-2. Buka browser Anda dan kunjungi http://localhost:5000 untuk mulai menggunakan chatbot! ✨
+3. Buka browser Anda dan kunjungi http://localhost:5000 untuk mulai menggunakan chatbot! ✨
 
 
 💡 Kontribusi
