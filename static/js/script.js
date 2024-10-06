@@ -169,7 +169,7 @@ function showChatbotTogglerBubble() {
                 bubble.parentElement.removeChild(bubble);
             }
         });
-    }, 1500);
+    }, 750);
 }
 
 // Event Listeners
