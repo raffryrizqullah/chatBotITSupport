@@ -33,7 +33,7 @@ Siap untuk memulai? Ikuti langkah-langkah di bawah ini! 🚀
 ## 🎮 Penggunaan
 Mau tahu cara menggunakan chatbot ini? Simak langkah-langkah berikut! 📖
 
-1. Jalankan server backend (misalnya, jika menggunakan Flask):
+1. Jalankan server backend (menggunakan Flask):
    ```bash
    python app.py
 
@@ -61,20 +61,9 @@ Raffry Rizqullah - raffryrizqullah@gmail.com
 - JavaScript: Logika interaktif untuk chatbot.
 - Python: Backend untuk pengolahan data dan logika chatbot (misalnya, menggunakan Flask).
 
-
-
-
-
-
-
+.
+.
+.
 
 Terima kasih telah mengunjungi Chatbot ITSupport UII! Semoga Anda menikmati proyek ini sama seperti saya! 🎉
-
-
-### Catatan:
-1. **Ganti `USERNAME`**: Jangan lupa mengganti `USERNAME` dengan nama pengguna GitHub Anda.
-2. **Tambahkan Informasi**: Sesuaikan informasi lain seperti nama Anda, email, dan detail lainnya yang relevan untuk proyek Anda.
-3. **Periksa Lisensi**: Jika Anda memiliki file `LICENSE`, pastikan untuk menyertakan informasi tentang lisensi tersebut.
-
-Dengan penggabungan ini, README Anda sekarang lebih lengkap dan informatif! Jika ada hal lain yang ingin Anda tambahkan atau ubah, silakan beri tahu saya!
 
