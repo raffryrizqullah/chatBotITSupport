@@ -1,6 +1,6 @@
 ## 🤖 Chatbot ITSupport UII
 
-Selamat datang di **Chatbot ITSupport UII**! 🎉 Proyek ini adalah chatbot interaktif yang dirancang untuk membantu pengguna dengan pertanyaan seputar layanan IT di UII. Dengan tampilan yang modern dan interaksi yang mudah, chatbot ini siap membantu Anda kapan saja!
+Selamat datang di **Chatbot ITSupport UII**! 🎉 Projek ini adalah chatbot interaktif yang dirancang untuk membantu pengguna dengan pertanyaan seputar layanan IT di UII. Dengan tampilan yang modern dan interaksi yang mudah, chatbot ini siap membantu Anda kapan saja!
 
 ## 🌟 Fitur Utama
 - **Interaksi Real-time**: Tanya jawab langsung dengan chatbot yang responsif.
