@@ -53,7 +53,7 @@ Proyek ini dilisensikan di bawah MIT License. 🤞🫣
 ## 📬 Kontak
 Jika Anda memiliki pertanyaan, saran, atau ingin ngobrol lebih lanjut, jangan ragu untuk menghubungi saya!
 
-Nama Anda - raffryrizqullah@gmail.com
+Raffry Rizqullah - raffryrizqullah@gmail.com
 
 ## 🎨 Teknologi yang Digunakan
 - HTML: Struktur halaman web.
