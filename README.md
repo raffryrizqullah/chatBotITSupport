@@ -20,7 +20,7 @@ Siap untuk memulai? Ikuti langkah-langkah di bawah ini! 🚀
 
 1. Clone repositori ini:
    ```bash
-   git clone https://github.com/USERNAME/chatbot.git
+   git clone https://github.com/RAFFRYRIZQULLAH/chatbot.git
    
 2. Masuk ke direktori proyek:
    ```bash
