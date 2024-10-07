@@ -42,13 +42,19 @@ def chat():
     """Handles chat requests and responds with AI generated text, using session for memory context."""
     user_message = request.json.get('message')
 
+    template = """ """
+
     # Update session with the conversation history
     if 'conversation' not in session:
         session['conversation'] = []
     session['conversation'].append({"role": "user", "content": user_message})
 
     messages = [
-        {"role": "system", "content": "You are a helpful assistant for BSI UII IT Support. Use the provided knowledge base to answer user queries, but always improve upon the information by summarizing, analyzing, or adding additional helpful context. Please only provide answers in Indonesia language and based on the following document. Do not copy the information verbatim."},
+        {"role": "system", "content": """You are the best bsi uii it support team representative. I have shared my knowledge base with you and you will give the best answer.
+            and you will follow ALL of the rules below:
+            1/ Response should be very similar or even identical to the past best practices, 
+            in terms of length, ton of voice, logical arguments and other details
+            2/ If the best practice are irrelevant, then try to mimic the style of the best practice to user"""},
         *session['conversation'],
         {"role": "assistant", "content": base_knowledge}
     ]
@@ -58,7 +64,7 @@ def chat():
     response = client.chat.completions.create(
         model="ft:gpt-4o-2024-08-06:personal:contoh-chatbot:AEgHLyZ2",
         messages=messages,
-        temperature=0.7
+        temperature=0.
     )
 
     ai_message = response.choices[0].message.content.strip()
