@@ -1,209 +1,101 @@
-// DOM Elements
-const chatbotToggler = document.querySelector('.chatbot-toggler');
-const closeBtn = document.querySelector('.close-btn');
-const chatbox = document.querySelector('.chatbox');
-const chatInput = document.querySelector('.chat-input textarea');
-const sendChatBtn = document.querySelector('.chat-input span');
+const chatbotToggler = document.querySelector(".chatbot-toggler");
+const closeBtn = document.querySelector(".close-btn");
+const chatbox = document.querySelector(".chatbox");
+const chatInput = document.querySelector(".chat-input textarea");
+const sendChatBtn = document.querySelector(".chat-input span");
 
-// Variables
-let userMessage = null;
-let inputInitHeight;
-let initialMessageShown = false;
+let userMessage = null; // Stores user's message
+const inputInitHeight = chatInput.scrollHeight; // Initial height of the chat input area
 
-// Initialize after DOM content is loaded
-window.addEventListener('DOMContentLoaded', () => {
-    // Simpan tinggi awal dari input chat
-    inputInitHeight = chatInput.scrollHeight;
-    // Tampilkan gelembung notifikasi chatbot
-    showChatbotTogglerBubble();
-});
+// Function to create chat <li> elements
+const createChatLi = (message, className) => {
+  const chatLi = document.createElement("li");
+  chatLi.classList.add("chat", `${className}`);
+  let chatContent =
+    className === "outgoing"
+      ? `<p></p>` // No icon for outgoing messages
+      : `<span class="material-symbols-outlined">smart_toy</span><p></p>`; // Icon for incoming messages
+  chatLi.innerHTML = chatContent;
+  chatLi.querySelector("p").textContent = message;
+  return chatLi;
+};
 
-// Helper Functions
+// Function to handle API response and update UI
+const generateResponse = async (chatElement) => {
+  const messageElement = chatElement.querySelector("p");
+  const requestOptions = {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: `msg=${encodeURIComponent(userMessage)}`,
+  };
 
-/**
- * Membuat elemen list chat dengan pesan dan kelas tertentu.
- * @param {string} message - Pesan yang akan ditampilkan.
- * @param {string} className - Kelas CSS untuk styling ('outgoing' atau 'incoming').
- * @returns {HTMLLIElement} Elemen list chat yang dibuat.
- */
-function createChatLi(message, className) {
-    const chatLi = document.createElement('li');
-    chatLi.classList.add('chat', className);
-    const chatContent = className === 'outgoing'
-        ? '<p></p>'
-        : '<span class="material-symbols-outlined">smart_toy</span><p></p>';
-    chatLi.innerHTML = chatContent;
-    chatLi.querySelector('p').innerHTML = formatMessage(message);
-    return chatLi;
-}
+  try {
+    const response = await fetch("/get", requestOptions);
+    const data = await response.text();
+    if (!response.ok) throw new Error(data);
 
-/**
- * Membuat elemen animasi loading.
- * @returns {HTMLDivElement} Elemen div animasi loading.
- */
-function createLoadingAnimation() {
-    const loadingDiv = document.createElement('div');
-    loadingDiv.classList.add('loading-spinner');
-    return loadingDiv;
-}
+    messageElement.textContent = data; // Set API response text in chat
+  } catch (error) {
+    messageElement.classList.add("error");
+    messageElement.textContent = error.message; // Display error message
+  } finally {
+    chatbox.scrollTo(0, chatbox.scrollHeight); // Ensure chatbox scrolls to latest message
+  }
+};
 
-/**
- * Menganimasikan munculnya gelembung chat.
- * @param {HTMLElement} chatElement - Elemen chat yang akan dianimasikan.
- */
-function animateChatBubble(chatElement) {
-    chatElement.style.opacity = 0;
-    chatElement.style.transform = 'scale(0.5)';
-    chatElement.style.transition = 'all 0.4s ease';
-    requestAnimationFrame(() => {
-        chatElement.style.opacity = 1;
-        chatElement.style.transform = 'scale(1)';
-    });
-}
+const createThinkingDots = () => {
+  const chatLi = document.createElement("li");
+  chatLi.classList.add("chat", "incoming");
+  const dotsContainer = document.createElement("div");
+  dotsContainer.classList.add("thinking-dots");
+  for (let i = 0; i < 5; i++) {
+    const dot = document.createElement("span");
+    dotsContainer.appendChild(dot);
+  }
+  chatLi.appendChild(dotsContainer);
+  return chatLi;
+};
 
-/**
- * Memformat pesan untuk mendukung teks tebal dan tautan.
- * @param {string} message - Pesan yang akan diformat.
- * @returns {string} Pesan yang telah diformat dalam bentuk HTML.
- */
-function formatMessage(message) {
-    // Mengganti **teks** atau *teks* dengan tag HTML bold
-    message = message.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    message = message.replace(/\*(.*?)\*\*/g, '<strong>$1</strong>');
-    
-    // Mengganti URL menjadi tautan yang dapat diklik
-    message = message.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" style="color: blue;">$1</a>');
-    
-    return message;
-}
+// Main function to handle sending and receiving chats
+const handleChat = () => {
+  userMessage = chatInput.value.trim();
+  if (!userMessage) return; // Do nothing if message is empty
 
-/**
- * Menghandle pengiriman pesan chat.
- */
-function handleChat() {
-    // Cek apakah input kosong
-    if (!chatInput.value.trim()) return;
-    
-    userMessage = chatInput.value.trim();
-    // Nonaktifkan input untuk mencegah spam
-    chatInput.disabled = true;
-    sendChatBtn.style.pointerEvents = 'none';
-    chatInput.value = '';
-    chatInput.style.height = `${inputInitHeight}px`;
+  chatInput.value = "";
+  chatInput.style.height = `${inputInitHeight}px`;
 
-    // Tampilkan pesan keluar
-    const outgoingChatLi = createChatLi(userMessage, 'outgoing');
-    chatbox.appendChild(outgoingChatLi);
-    animateChatBubble(outgoingChatLi);
-    chatbox.scrollTo(0, chatbox.scrollHeight);
+  chatbox.appendChild(createChatLi(userMessage, "outgoing"));
+  chatbox.scrollTo(0, chatbox.scrollHeight);
 
-    // Tampilkan animasi loading untuk pesan masuk
-    const incomingChatLi = document.createElement('li');
-    incomingChatLi.classList.add('chat', 'incoming');
-    incomingChatLi.innerHTML = '<span class="material-symbols-outlined">smart_toy</span>';
-    const loadingAnimation = createLoadingAnimation();
-    incomingChatLi.appendChild(loadingAnimation);
+  setTimeout(() => {
+    const incomingChatLi = createChatLi("Sedang Berfikir...", "incoming");
     chatbox.appendChild(incomingChatLi);
-    animateChatBubble(incomingChatLi);
-    chatbox.scrollTo(0, chatbox.scrollHeight);
+    generateResponse(incomingChatLi);
+  }, 600);
+};
 
-    // Kirim pesan ke backend
-    fetch('/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userMessage })
-    })
-    .then(response => response.json())
-    .then(data => {
-        // Aktifkan kembali input setelah menerima respon
-        chatInput.disabled = false;
-        sendChatBtn.style.pointerEvents = 'auto';
-        chatInput.focus();
-
-        // Hapus animasi loading dan tampilkan respon
-        loadingAnimation.remove();
-        const replySteps = data.reply.split('\n');
-        const fragment = document.createDocumentFragment();
-        replySteps.forEach(step => {
-            const replyP = document.createElement('p');
-            replyP.innerHTML = formatMessage(step);
-            fragment.appendChild(replyP);
-        });
-        incomingChatLi.appendChild(fragment);
-        chatbox.scrollTo(0, chatbox.scrollHeight);
-    })
-    .catch(error => {
-        // Aktifkan kembali input jika terjadi error
-        chatInput.disabled = false;
-        sendChatBtn.style.pointerEvents = 'auto';
-        loadingAnimation.remove();
-
-        // Tampilkan pesan error
-        const errorP = document.createElement('p');
-        errorP.textContent = 'Error: ' + error.message;
-        incomingChatLi.appendChild(errorP);
-    });
-}
-
-/**
- * Menampilkan gelembung pesan sementara pada tombol toggler chatbot.
- */
-function showChatbotTogglerBubble() {
-    const bubble = document.createElement('div');
-    bubble.classList.add('chatbot-bubble');
-    bubble.innerHTML = '<div class="bubble-message"><div class="message-content">online!</div></div>';
-    chatbotToggler.appendChild(bubble);
-    bubble.style.opacity = 0;
-    bubble.style.transition = 'opacity 0.5s ease';
-
-    // Animasi fade in
-    requestAnimationFrame(() => {
-        bubble.style.opacity = 1;
-    });
-
-    // Animasi fade out dan hapus elemen setelah 3 detik
-    setTimeout(() => {
-        bubble.style.opacity = 0;
-        bubble.addEventListener('transitionend', () => {
-            if (bubble.parentElement) {
-                bubble.parentElement.removeChild(bubble);
-            }
-        });
-    }, 750);
-}
-
-// Event Listeners
-
-// Sesuaikan tinggi textarea input berdasarkan konten
-chatInput.addEventListener('input', () => {
-    chatInput.style.height = `${inputInitHeight}px`;
-    chatInput.style.height = `${chatInput.scrollHeight}px`;
+// Event listeners for dynamic UI interactions
+chatInput.addEventListener("input", () => {
+  chatInput.style.height = `${inputInitHeight}px`;
+  chatInput.style.height = `${chatInput.scrollHeight}px`;
 });
 
-// Kirim pesan saat tombol Enter ditekan tanpa Shift
-chatInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        handleChat();
-    }
+chatInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && !e.shiftKey && window.innerWidth > 800) {
+    e.preventDefault();
+    handleChat();
+  }
 });
 
-// Kirim pesan saat tombol kirim diklik
-sendChatBtn.addEventListener('click', handleChat);
-
-// Tutup antarmuka chatbot
-closeBtn.addEventListener('click', () => {
-    document.body.classList.remove('show-chatbot');
-});
-
-// Toggle visibilitas antarmuka chatbot dan tampilkan pesan awal
-chatbotToggler.addEventListener('click', () => {
-    document.body.classList.toggle('show-chatbot');
-    if (document.body.classList.contains('show-chatbot') && !initialMessageShown) {
-        const initialMessage = 'Halo Sobat UII 👋<br />Apakah ada yang bisa saya bantu?';
-        const initialChatLi = createChatLi(initialMessage, 'incoming');
-        chatbox.appendChild(initialChatLi);
-        animateChatBubble(initialChatLi);
-        initialMessageShown = true;
-    }
+sendChatBtn.addEventListener("click", handleChat);
+closeBtn.addEventListener("click", () =>
+  document.body.classList.remove("show-chatbot")
+);
+chatbotToggler.addEventListener("click", function () {
+  document.body.classList.toggle("show-chatbot");
+  const textElement = document.querySelector(".animated-text");
+  textElement.classList.remove("animate-in"); // Reset animasi
+  setTimeout(() => {
+    textElement.classList.add("animate-in"); // Tambahkan kembali untuk memicu animasi
+  }, 10); // Timeout kecil untuk memastikan kelas di-reset
 });

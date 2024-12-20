@@ -1,35 +1,17 @@
-/* 1. Import Google Font */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+/* Import Google font - Poppins */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
 
-/* 2. Global Styles */
 * {
   margin: 0;
+  padding: 0;
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
 }
 
-html, body {
-  height: 100%;
-}
-
 body {
   background: #e6e6e6;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
 }
 
-.video-background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  min-width: 100%;
-  min-height: 100%;
-  z-index: -1;
-}
-
-
-/* 3. Chatbot Toggler Styles */
 .chatbot-toggler {
   position: fixed;
   bottom: 30px;
@@ -52,7 +34,7 @@ body.show-chatbot .chatbot-toggler {
 }
 
 .chatbot-toggler span {
-  color: #ffffff;
+  color: #fff;
   position: absolute;
 }
 
@@ -65,35 +47,12 @@ body.show-chatbot .chatbot-toggler span:last-child {
   opacity: 1;
 }
 
-.chatbot-bubble {
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #06337b;
-  color: #fff;
-  padding: 8px 12px;
-  border-radius: 8px;
-  font-size: 12px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  opacity: 0;
-  pointer-events: none;
+.chatbot-toggler:hover,
+.chatbot-toggler:focus {
+  background-color: #ffda47; /* Lebih terang */
+  transform: scale(1.1); /* Sedikit zoom */
 }
 
-.chatbot-bubble::after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 0;
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-    border-top: 8px solid #06337b;
-}
-
-/* 4. Chatbot Container Styles */
 .chatbot {
   position: fixed;
   right: 35px;
@@ -107,8 +66,8 @@ body.show-chatbot .chatbot-toggler span:last-child {
   transform: scale(0.5);
   transform-origin: bottom right;
   box-shadow: 0 0 128px 0 rgba(0, 0, 0, 0.1),
-              0 32px 64px -48px rgba(0, 0, 0, 0.5);
-  transition: all 0.1s ease;
+    0 32px 64px -48px rgba(0, 0, 0, 0.5);
+  transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
 body.show-chatbot .chatbot {
@@ -117,7 +76,6 @@ body.show-chatbot .chatbot {
   transform: scale(1);
 }
 
-/* 5. Chatbot Header Styles */
 .chatbot header {
   padding: 16px 0;
   position: relative;
@@ -140,7 +98,6 @@ header h2 {
   font-size: 1.4rem;
 }
 
-/* 6. Chatbox Styles */
 .chatbot .chatbox {
   overflow-y: auto;
   height: 510px;
@@ -161,25 +118,15 @@ header h2 {
   border-radius: 25px;
 }
 
-/* 7. Chat Message Styles */
 .chatbox .chat {
   display: flex;
   list-style: none;
-  opacity: 0; 
-  transform: scale(0.5); 
-  transition: all 0.4s ease; 
+  animation: slideIn 0.5s forwards, fadeIn 0.5s forwards;
 }
 
 .chatbox .outgoing {
   margin: 20px 0;
   justify-content: flex-end;
-  animation: bubbleAnimation 0.4s ease forwards;
-}
-
-.chatbox .incoming {
-  margin: 20px 0;
-  justify-content: flex-start;
-  animation: bubbleAnimation 0.4s ease forwards;
 }
 
 .chatbox .incoming span {
@@ -191,7 +138,7 @@ header h2 {
   line-height: 32px;
   align-self: flex-end;
   background: #06337b;
-  border-radius: 4px;
+  border-radius: 50px;
   margin: 0 10px 7px 0;
 }
 
@@ -207,8 +154,6 @@ header h2 {
 
 .chatbox .incoming p {
   border-radius: 10px 10px 10px 0;
-  color: #000;
-  background: #f2f2f2;
 }
 
 .chatbox .chat p.error {
@@ -216,7 +161,11 @@ header h2 {
   background: #f8d7da;
 }
 
-/* 8. Chat Input Styles */
+.chatbox .incoming p {
+  color: #000;
+  background: #f2f2f2;
+}
+
 .chatbot .chat-input {
   display: flex;
   gap: 5px;
@@ -254,7 +203,107 @@ header h2 {
   visibility: visible;
 }
 
-/* 9. Media Queries */
+.tooltip {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -60px;
+}
+
+.chatbot-toggler:hover .tooltip {
+  visibility: visible;
+}
+
+.video-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  min-height: 100%;
+  z-index: -1;
+}
+
+@keyframes dotWave {
+  0%,
+  40%,
+  100% {
+    transform: translateY(0);
+  }
+  20% {
+    transform: translateY(-10px);
+  }
+}
+
+.thinking-dots span {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin: 0 2px;
+  background-color: #06337b;
+  border-radius: 50%;
+  animation: dotWave 1.2s infinite ease-in-out both;
+}
+
+.thinking-dots span:nth-child(2) {
+  animation-delay: -1.1s;
+}
+
+.thinking-dots span:nth-child(3) {
+  animation-delay: -1s;
+}
+
+.thinking-dots span:nth-child(4) {
+  animation-delay: -0.9s;
+}
+
+.thinking-dots span:nth-child(5) {
+  animation-delay: -0.8s;
+}
+
+.animated-text {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.8s ease-out forwards;
+  animation-delay: 1s;
+  text-align: left;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.chat {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: slideIn 0.5s forwards;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (max-width: 490px) {
   .chatbot-toggler {
     right: 20px;
@@ -280,33 +329,5 @@ header h2 {
 
   .chatbot header span {
     display: block;
-  }
-}
-
-/* 10. Loading Spinner Styles */
-.loading-spinner {
-  border: 4px solid rgba(0, 0, 0, 0.1);
-  border-left-color: #06337b;
-  border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  animation: spin 1s linear infinite;
-}
-
-/* 11. Animations */
-@keyframes spin {
-  to {
-      transform: rotate(360deg);
-  }
-}
-
-@keyframes bubbleAnimation {
-  from {
-    opacity: 0;
-    transform: scale(0.5);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
   }
 }

@@ -1,67 +1,82 @@
-import os
-import time
-import pdfplumber
-from openai import OpenAI
-from flask import Flask, request, render_template, session
-from flask_session import Session
+from flask import Flask, request, jsonify, render_template
+from source.function import read_file, text_splitter, download_openai_embeddings  
+from langchain_pinecone import PineconeVectorStore
+from langchain_openai import ChatOpenAI
+from langchain.chains.retrieval import create_retrieval_chain
+from langchain.chains.combine_documents import create_stuff_documents_chain
+from langchain_core.prompts import ChatPromptTemplate
 from dotenv import load_dotenv
-
-load_dotenv()
+from source.promting import * 
+import os
 
 app = Flask(__name__)
-app.config["SESSION_PERMANENT"] = False
-app.config["SESSION_TYPE"] = "filesystem"
-Session(app)
 
-api_key = os.getenv("OPENAI_API_KEY")
-client = OpenAI(api_key=api_key)
+# Load environment variables
+load_dotenv()
 
-def extract_text_from_pdf(pdf_path):
-    text = ''
-    with pdfplumber.open(pdf_path) as pdf:
-        for page in pdf.pages:
-            text += page.extract_text()
-    return text
+# Retrieve Pinecone and OpenAI API keys from environment variables
+PINECONE_API_KEY = os.getenv('PINECONE_API_KEY')
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
-base_knowledge_path = "pdf/binder1.pdf"
-base_knowledge = extract_text_from_pdf(base_knowledge_path)
+# Ensure API keys are present
+if not PINECONE_API_KEY or not OPENAI_API_KEY:
+    raise ValueError("API keys are missing. Please check your .env file.")
 
-@app.route('/')
+# Initialize embeddings
+embeddings = download_openai_embeddings()
+
+# Define Pinecone index name
+index_name = "chatbot-index"
+
+# Initialize Pinecone Vector Store from an existing index
+docsearch = PineconeVectorStore.from_existing_index(
+    index_name=index_name,
+    embedding=embeddings
+)
+
+# Configure retriever for similarity search with top 3 results
+retriever = docsearch.as_retriever(search_type="similarity", search_kwargs={"k":2})
+
+# Setup OpenAI language model with specified parameters
+llm = ChatOpenAI(model="ft:gpt-4o-2024-08-06:personal:chtbt-081024:AFz8pTD0",temperature=0.5, max_tokens=None)
+prompt = ChatPromptTemplate.from_messages(
+    [
+        ("system", system_prompt),
+        ("human", "{input}"),
+    ]
+)
+
+# llm = ChatOpenAI(model="gpt-4",temperature=0.7, max_tokens=500)
+# prompt = ChatPromptTemplate.from_messages(
+#     [
+#         ("system", system_prompt),
+#         ("human", "{input}"),
+#     ]
+# )
+
+# Combine retrieval and answering chains
+question_answer_chain = create_stuff_documents_chain(llm, prompt)
+rag_chain = create_retrieval_chain(retriever, question_answer_chain)
+
+# Define index route to render the main page
+@app.route("/")
 def index():
-    session.clear()
     return render_template('index.html')
 
-@app.route('/chat', methods=['POST'])
+# Define route to handle chat messages
+@app.route("/get", methods=["POST"])
 def chat():
-    user_message = request.json.get('message')
+    msg = request.form.get("msg")
+    if msg:
+        response = rag_chain.invoke({"input": msg})
+        full_answer = response["answer"]
+        
+        # Process and return the response, stripping out "System:" part if present
+        answer = full_answer.split("System:", 1)[-1] if "System:" in full_answer else full_answer
+        return answer.strip()  # Return only the text part of the answer
+    else:
+        return "No message provided", 400
 
-    template = """ """
-
-    if 'conversation' not in session:
-        session['conversation'] = []
-    session['conversation'].append({"role": "user", "content": user_message})
-
-    messages = [
-        {"role": "system", "content": """You are the best bsi uii it support team representative. I have shared my knowledge base with you and you will give the best answer.
-            and you will follow ALL of the rules below:
-            1/ Response should be very similar or even identical to the past best practices, 
-            in terms of length, ton of voice, logical arguments and other details
-            2/ If the best practice are irrelevant, then try to mimic the style of the best practice to user"""},
-        *session['conversation'],
-        {"role": "assistant", "content": base_knowledge}
-    ]
-
-    time.sleep(1)
-
-    response = client.chat.completions.create(
-        model="ft:gpt-4o-2024-08-06:personal:contoh-chatbot:AEgHLyZ2",
-        messages=messages,
-        temperature=0.
-    )
-
-    ai_message = response.choices[0].message.content.strip()
-    session['conversation'].append({"role": "assistant", "content": ai_message})
-    return {"reply": ai_message}
-
+# Run the application
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True)  # Set debug=False for production settings
