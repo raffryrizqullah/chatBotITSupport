@@ -12,7 +12,7 @@ load_dotenv()
 PINECONE_API_KEY = os.getenv('PINECONE_API_KEY')  # Use getenv for safe retrieval
 
 # Load extracted data from the directory
-extracted_data = read_file("Data/")
+extracted_data = read_file("data/")
 # Split extracted data into text chunks
 text_chunks = text_splitter(extracted_data)  # Corrected typo in function call
 # Download embeddings from OpenAI

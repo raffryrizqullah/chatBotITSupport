@@ -68,7 +68,7 @@ const handleChat = () => {
   chatbox.scrollTo(0, chatbox.scrollHeight);
 
   setTimeout(() => {
-    const incomingChatLi = createChatLi("Sedang Berfikir...", "incoming");
+    const incomingChatLi = createChatLi("mencari dokumen...", "incoming");
     chatbox.appendChild(incomingChatLi);
     generateResponse(incomingChatLi);
   }, 600);
