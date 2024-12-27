@@ -1,7 +1,3 @@
-Here's your GitHub repository description translated into English:
-
----
-
 ## 🤖 Chatbot ITSupport
 
 Welcome to **Chatbot ITSupport**! 🎉 This project is an interactive chatbot designed to assist users with IT service-related questions. With a modern look and easy interactions, this chatbot is ready to help you at any time!
