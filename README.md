@@ -1,66 +1,71 @@
+Here's your GitHub repository description translated into English:
+
+---
+
 ## 🤖 Chatbot ITSupport
 
-Selamat datang di **Chatbot ITSupport**! 🎉 Projek ini adalah chatbot interaktif yang dirancang untuk membantu pengguna dengan pertanyaan seputar layanan IT. Dengan tampilan yang modern dan interaksi yang mudah, chatbot ini siap membantu Anda kapan saja!
+Welcome to **Chatbot ITSupport**! 🎉 This project is an interactive chatbot designed to assist users with IT service-related questions. With a modern look and easy interactions, this chatbot is ready to help you at any time!
 
-## 🌟 Fitur Utama
-- **Interaksi Real-time**: Tanya jawab langsung dengan chatbot yang responsif.
-- **Desain Menarik**: Dengan video latar belakang dan antarmuka yang ramah pengguna.
-- **Dukungan Format Pesan**: Sangat rapih dan ramah untuk antarmuka.
+## 🌟 Key Features
+- **Real-time Interaction**: Direct Q&A with a responsive chatbot.
+- **Attractive Design**: Features video backgrounds and a user-friendly interface.
+- **Message Format Support**: Neatly formatted and interface-friendly.
 
-## 📚 Tabel Konten
-- [Instalasi](#instalasi)
-- [Penggunaan](#penggunaan)
-- [Kontribusi](#kontribusi)
-- [Lisensi](#lisensi)
-- [Kontak](#kontak)
+## 📚 Table of Contents
+- [Installation](#installation)
+- [Usage](#usage)
+- [Contribution](#contribution)
+- [License](#license)
+- [Contact](#contact)
 
-## 🛠️ Instalasi
+## 🛠️ Installation
 
-Siap untuk memulai? Ikuti langkah-langkah di bawah ini! 🚀
+Ready to get started? Follow these steps! 🚀
 
-1. Clone repositori ini:
+1. Clone this repository:
    ```bash
    git clone https://github.com/RAFFRYRIZQULLAH/chatBotITSupport.git
+   ```
    
-2. Masuk ke direktori proyek:
+2. Enter the project directory:
    ```bash
    cd chatBotITSupport
+   ```
 
-4. Install dependensi (jika diperlukan):
+3. Install dependencies (if necessary):
    ```bash
    pip install -r requirements.txt
+   ```
 
-## 🎮 Penggunaan
-Mau tahu cara menggunakan chatbot ini? Simak langkah-langkah berikut! 📖
+## 🎮 Usage
+Want to know how to use this chatbot? Check out the following steps! 📖
 
-1. Jalankan server backend (menggunakan Flask):
+1. Run the backend server (using Flask):
    ```bash
    python app.py
+   ```
 
-3. Buka browser Anda dan kunjungi http://localhost:5000 untuk mulai menggunakan chatbot! ✨
+2. Open your browser and visit http://localhost:5000 to start using the chatbot! ✨
 
+## 💡 Contribution
+We'd love if you'd like to contribute! 🤗
 
-## 💡 Kontribusi
-Kami senang jika Anda ingin berkontribusi! 🤗
+- Fork this repository
+- Make the changes you want
+- Submit a pull request for discussion
 
-- Fork repositori ini
-- Buat perubahan yang Anda inginkan
-- Kirimkan pull request untuk dibahas
+## 📝 License
+This project is licensed under the MIT License. 🤞🫣
 
-## 📝 Lisensi
-Proyek ini dilisensikan di bawah MIT License. 🤞🫣
-
-## 📬 Kontak
-Jika Anda memiliki pertanyaan, saran, atau ingin ngobrol lebih lanjut, jangan ragu untuk menghubungi saya!
+## 📬 Contact
+If you have any questions, suggestions, or would like to discuss further, feel free to contact me!
 
 Raffry Rizqullah - raffryrizqullah@gmail.com
 
-## 🎨 Teknologi yang Digunakan
-- HTML: Struktur halaman web.
-- CSS: Gaya dan tata letak halaman.
-- JavaScript: Logika interaktif untuk chatbot.
-- Python: Backend untuk pengolahan data dan logika chatbot menggunakan Flask.
+## 🎨 Technologies Used
+- HTML: Web page structure.
+- CSS: Page styling and layout.
+- JavaScript: Interactive logic for the chatbot.
+- Python: Backend for processing data and chatbot logic using Flask.
 
-  
-
-Terima kasih telah mengunjungi Chatbot ITSupport! Semoga Anda menikmati proyek ini sama seperti saya! 🎉
+Thank you for visiting Chatbot ITSupport! I hope you enjoy this project as much as I do! 🎉
