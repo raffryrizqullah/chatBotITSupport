@@ -23,7 +23,6 @@ pc = Pinecone(api_key=PINECONE_API_KEY)
 
 # Define index parameters
 index_name = "chatbot-index"
-# Create Pinecone index with specified configuration
 pc.create_index(
     name=index_name,
     dimension=3072, 

@@ -56,7 +56,6 @@ const createThinkingDots = () => {
   return chatLi;
 };
 
-// Main function to handle sending and receiving chats
 const handleChat = () => {
   userMessage = chatInput.value.trim();
   if (!userMessage) return; // Do nothing if message is empty
