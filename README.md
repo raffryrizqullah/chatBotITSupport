@@ -8,11 +8,11 @@ Welcome to **Chatbot ITSupport**! 🎉 This project is an interactive chatbot de
 - **Message Format Support**: Neatly formatted and interface-friendly.
 
 ## 📚 Table of Contents
-- [Installation](#installation)
-- [Usage](#usage)
-- [Contribution](#contribution)
-- [License](#license)
-- [Contact](#contact)
+- [Installation](#installation).
+- [Usage](#usage).
+- [Contribution](#contribution).
+- [License](#license).
+- [Contact](#contact).
 
 ## 🛠️ Installation
 
