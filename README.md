@@ -4,7 +4,7 @@ Welcome to **Chatbot ITSupport**! 🎉 This project is an interactive chatbot de
 
 ## 🌟 Key Features
 - **Real-time Interaction**: Direct Q&A with a responsive chatbot.
-- **Attractive Design**: Features video backgrounds and a user-friendly interface.
+- **Attractive Design**: Features and a user-friendly interface.
 - **Message Format Support**: Neatly formatted and interface-friendly.
 
 ## 📚 Table of Contents
