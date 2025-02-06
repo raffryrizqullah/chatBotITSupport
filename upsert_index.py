@@ -1,41 +1,31 @@
-from source.function import read_file, text_splitter, download_openai_embeddings  # Corrected typo in import
+from source.function import read_file, text_splitter, download_openai_embeddings
 from pinecone.grpc import PineconeGRPC as Pinecone
 from pinecone import ServerlessSpec
 from langchain_pinecone import PineconeVectorStore
 from dotenv import load_dotenv
 import os
 
-# Load environment variables
-load_dotenv()
+load_dotenv()  # Load .env file
 
-# Retrieve Pinecone API key from environment variables
-PINECONE_API_KEY = os.getenv('PINECONE_API_KEY')  # Use getenv for safe retrieval
+PINECONE_API_KEY = os.getenv('PINECONE_API_KEY')  # API key retrieval
 
-# Load extracted data from the directory
-extracted_data = read_file("data/")
-# Split extracted data into text chunks
-text_chunks = text_splitter(extracted_data)  # Corrected typo in function call
-# Download embeddings from OpenAI
-embeddings = download_openai_embeddings()
+extracted_data = read_file("data/")  # Load data from directory
+text_chunks = text_splitter(extracted_data)  # Split data into chunks
+embeddings = download_openai_embeddings()  # Get embeddings from OpenAI
 
-# Initialize Pinecone connection
-pc = Pinecone(api_key=PINECONE_API_KEY)
+pc = Pinecone(api_key=PINECONE_API_KEY)  # Initialize Pinecone
 
-# Define index parameters
-index_name = "chatbot-index"
+# Create Pinecone index with specified configurations
 pc.create_index(
-    name=index_name,
+    name="chatbot-index",
     dimension=3072, 
     metric="cosine", 
-    spec=ServerlessSpec(
-        cloud="gcp", 
-        region="europe-west4"
-    )
+    spec=ServerlessSpec(cloud="gcp", region="europe-west4")
 )
 
-# Create a Pinecone vector store for document search
+# Initialize a Pinecone vector store with documents
 docsearch = PineconeVectorStore.from_documents(
     documents=text_chunks,
-    index_name=index_name,
+    index_name="chatbot-index",
     embedding=embeddings
 )

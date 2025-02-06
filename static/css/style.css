@@ -48,8 +48,8 @@ body.show-chatbot .chatbot-toggler span:last-child {
 
 .chatbot-toggler:hover,
 .chatbot-toggler:focus {
-  background-color: #ffda47; /* Lebih terang */
-  transform: scale(1.1); /* Sedikit zoom */
+  background-color: #ffda47;
+  transform: scale(1.1);
 }
 
 .chatbot {

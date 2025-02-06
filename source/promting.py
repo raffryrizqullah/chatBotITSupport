@@ -10,7 +10,7 @@
 # )
 
 
-# System prompt template for an IT support assistant at BSI UII
+# system prompt template for an IT support assistant at BSI UII
 system_prompt = (
     "you are an expert in IT Support BSI UII, having worked in the field for over a decade, and now you will notify users who have problems related to it support."
     "Provide step by step solutions to problems experienced by users from the knowledge base."
