@@ -1,80 +1,91 @@
-const chatbotToggler = document.querySelector(".chatbot-toggler");
-const closeBtn = document.querySelector(".close-btn");
-const chatbox = document.querySelector(".chatbox");
-const chatInput = document.querySelector(".chat-input textarea");
-const sendChatBtn = document.querySelector(".chat-input span");
+// Elemen HTML
+const chatbotToggleButton = document.querySelector(".chatbot-toggle-button");
+const chatbotCloseButton = document.querySelector(".chatbot-close-button");
+const chatMessagesContainer = document.querySelector(".chat-messages");
+const chatInputField = document.querySelector(".chat-input-area textarea");
+const sendMessageButton = document.querySelector(".chat-input-area span");
 
-let userMessage = null;
-const inputInitHeight = chatInput.scrollHeight;
+// Variabel untuk menyimpan pesan pengguna dan tinggi awal input
+let currentUserMessage = null;
+const initialChatInputHeight = chatInputField.scrollHeight;
 
-const createChatLi = (message, className) => {
-  const chatLi = document.createElement("li");
-  chatLi.classList.add("chat", `${className}`);
-  let chatContent =
-    className === "outgoing"
+// Fungsi untuk membuat elemen list (li) untuk pesan chat
+const createChatListItem = (messageText, messageType) => {
+  const chatListItem = document.createElement("li");
+  chatListItem.classList.add("chat", messageType);
+  const chatContent =
+    messageType === "outgoing"
       ? `<p></p>`
       : `<span class="material-symbols-outlined">smart_toy</span><p></p>`;
-  chatLi.innerHTML = chatContent;
-  chatLi.querySelector("p").textContent = message;
-  return chatLi;
+  chatListItem.innerHTML = chatContent;
+  chatListItem.querySelector("p").textContent = messageText;
+  return chatListItem;
 };
 
-const generateResponse = async (chatElement) => {
-  const messageElement = chatElement.querySelector("p");
+// Fungsi untuk mendapatkan respons dari server dan memperbarui pesan chat
+const generateResponse = async (chatListItem) => {
+  const messageParagraph = chatListItem.querySelector("p");
   const requestOptions = {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: `msg=${encodeURIComponent(userMessage)}`,
+    body: `msg=${encodeURIComponent(currentUserMessage)}`,
   };
 
   try {
     const response = await fetch("/get", requestOptions);
-    const data = await response.text();
-    if (!response.ok) throw new Error(data);
-    messageElement.textContent = data;
+    const responseText = await response.text();
+    if (!response.ok) throw new Error(responseText);
+    messageParagraph.textContent = responseText;
   } catch (error) {
-    messageElement.classList.add("error");
-    messageElement.textContent = error.message;
+    messageParagraph.classList.add("error");
+    messageParagraph.textContent = error.message;
   } finally {
-    chatbox.scrollTo(0, chatbox.scrollHeight);
+    chatMessagesContainer.scrollTo(0, chatMessagesContainer.scrollHeight);
   }
 };
 
+// Fungsi utama untuk memproses pesan chat pengguna
 const handleChat = () => {
-  userMessage = chatInput.value.trim();
-  if (!userMessage) return;
-  chatInput.value = "";
-  chatInput.style.height = `${inputInitHeight}px`;
-  chatbox.appendChild(createChatLi(userMessage, "outgoing"));
-  chatbox.scrollTo(0, chatbox.scrollHeight);
+  currentUserMessage = chatInputField.value.trim();
+  if (!currentUserMessage) return;
+
+  // Bersihkan input dan kembalikan ke tinggi awal
+  chatInputField.value = "";
+  chatInputField.style.height = `${initialChatInputHeight}px`;
+
+  // Tambahkan pesan keluar (outgoing) ke container chat
+  chatMessagesContainer.appendChild(
+    createChatListItem(currentUserMessage, "outgoing")
+  );
+  chatMessagesContainer.scrollTo(0, chatMessagesContainer.scrollHeight);
+
+  // Setelah jeda, tambahkan pesan masuk (incoming) dengan placeholder dan dapatkan respons
   setTimeout(() => {
-    const incomingChatLi = createChatLi(". . .", "incoming");
-    chatbox.appendChild(incomingChatLi);
-    generateResponse(incomingChatLi);
+    const incomingChatListItem = createChatListItem(". . .", "incoming");
+    chatMessagesContainer.appendChild(incomingChatListItem);
+    generateResponse(incomingChatListItem);
   }, 600);
 };
 
-chatInput.addEventListener("input", () => {
-  chatInput.style.height = `${inputInitHeight}px`;
-  chatInput.style.height = `${chatInput.scrollHeight}px`;
+// Atur perubahan tinggi input sesuai isian teks
+chatInputField.addEventListener("input", () => {
+  chatInputField.style.height = `${initialChatInputHeight}px`;
+  chatInputField.style.height = `${chatInputField.scrollHeight}px`;
 });
 
-chatInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter" && !e.shiftKey && window.innerWidth > 800) {
-    e.preventDefault();
+// Tangani pengiriman pesan dengan menekan tombol Enter (kecuali jika shift ditekan)
+chatInputField.addEventListener("keydown", (event) => {
+  if (event.key === "Enter" && !event.shiftKey && window.innerWidth > 800) {
+    event.preventDefault();
     handleChat();
   }
 });
 
-sendChatBtn.addEventListener("click", handleChat);
-closeBtn.addEventListener("click", () =>
+// Atur event listener untuk tombol kirim dan tombol tutup chatbot
+sendMessageButton.addEventListener("click", handleChat);
+chatbotCloseButton.addEventListener("click", () =>
   document.body.classList.remove("show-chatbot")
 );
-chatbotToggler.addEventListener("click", function () {
+chatbotToggleButton.addEventListener("click", () => {
   document.body.classList.toggle("show-chatbot");
-  const textElement = document.querySelector(".animated-text");
-  textElement.classList.remove("animate-in");
-  setTimeout(() => {
-    textElement.classList.add("animate-in");
-  }, 10);
 });
