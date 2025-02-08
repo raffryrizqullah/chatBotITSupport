@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template
 from source.function import download_openai_embeddings  
 from langchain_pinecone import PineconeVectorStore
-from langchain_openai import OpenAIEmbeddings, ChatOpenAI
+from langchain_openai import ChatOpenAI
 from langchain.chains.retrieval import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
