@@ -37,7 +37,8 @@ documentRetriever = pineconeVectorStore.as_retriever(
 
 # Inisialisasi model bahasa untuk chat
 chatLanguageModel = ChatOpenAI(
-    model="ft:gpt-4o-2024-08-06:personal:chtbt-081024:AFz8pTD0",
+    # model="ft:gpt-4o-2024-08-06:personal:chtbt-081024:AFz8pTD0",
+    model="gpt-4",
     temperature=0.5,
     max_tokens=None,
 )

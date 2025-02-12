@@ -41,6 +41,9 @@ const generateResponse = async (chatListItem) => {
     messageParagraph.textContent = error.message;
   } finally {
     chatMessagesContainer.scrollTo(0, chatMessagesContainer.scrollHeight);
+    // Mengaktifkan kembali input setelah respons diterima
+    chatInputField.disabled = false;
+    chatInputField.focus();
   }
 };
 
@@ -48,6 +51,9 @@ const generateResponse = async (chatListItem) => {
 const handleChat = () => {
   currentUserMessage = chatInputField.value.trim();
   if (!currentUserMessage) return;
+
+  // Nonaktifkan input saat menunggu respons
+  chatInputField.disabled = true;
 
   // Bersihkan input dan kembalikan ke tinggi awal
   chatInputField.value = "";
