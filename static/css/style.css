@@ -11,7 +11,7 @@ body {
   background: #e6e6e6;
 }
 
-/* Tombol toggle chatbot */
+/* Chatbot toggle button */
 .chatbot-toggle-button {
   position: fixed;
   bottom: 30px;
@@ -66,8 +66,7 @@ body.show-chatbot .chatbot-toggle-button span:last-child {
   pointer-events: none;
   transform: scale(0.5);
   transform-origin: bottom right;
-  box-shadow: 0 0 128px 0 rgba(0, 0, 0, 0.1),
-    0 32px 64px -48px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 128px 0 rgba(0, 0, 0, 0.1), 0 32px 64px -48px rgba(0, 0, 0, 0.5);
   transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
@@ -77,7 +76,7 @@ body.show-chatbot .chatbot {
   transform: scale(1);
 }
 
-/* Header chatbot */
+/* Chatbot header */
 .chatbot header {
   padding: 16px 0;
   position: relative;
@@ -100,7 +99,7 @@ header h2 {
   font-size: 1.4rem;
 }
 
-/* Container pesan chat */
+/* Chat messages container */
 .chat-messages {
   overflow-y: auto;
   height: 510px;
@@ -121,7 +120,7 @@ header h2 {
   border-radius: 25px;
 }
 
-/* Setiap item chat */
+/* Each chat item */
 .chat-messages .chat {
   display: flex;
   list-style: none;
@@ -140,7 +139,7 @@ header h2 {
   cursor: default;
   text-align: center;
   line-height: 32px;
-  font-size: x-large;
+  font-size: 1.5rem;
   align-self: flex-end;
   background: #06337b;
   border-radius: 50px;
@@ -168,7 +167,7 @@ header h2 {
   background: #f8d7da;
 }
 
-/* Area input pesan */
+/* Message input area */
 .chat-input-area {
   display: flex;
   gap: 5px;
@@ -216,7 +215,7 @@ header h2 {
   z-index: -1;
 }
 
-/* Animasi teks */
+/* Text animation */
 .animated-text {
   opacity: 0;
   transform: translateY(20px);
@@ -236,7 +235,7 @@ header h2 {
   }
 }
 
-/* Animasi item chat */
+/* Chat item animation */
 .chat {
   opacity: 0;
   transform: translateY(20px);

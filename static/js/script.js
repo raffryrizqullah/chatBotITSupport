@@ -43,7 +43,7 @@ class ChatbotController {
       typingDelay: 600,
       autoScrollDelay: 100,
       storageKey: 'chatbot_history',
-      typingStyle: 'dots' // 'dots', 'wave', 'bubble' - ganti sesuai preferensi
+      typingStyle: 'dots' // 'dots', 'wave', 'bubble' - change according to preference
     };
   }
 
@@ -90,7 +90,7 @@ class ChatbotController {
     setTimeout(() => {
       const content = this.chatInputField.value;
       if (content.length > this.config.maxMessageLength) {
-        this.showNotification(`Pesan terlalu panjang. Maksimal ${this.config.maxMessageLength} karakter.`, 'warning');
+        this.showNotification(`Message too long. Maximum ${this.config.maxMessageLength} characters.`, 'warning');
         this.chatInputField.value = content.substring(0, this.config.maxMessageLength);
       }
       this.handleInputResize();
@@ -109,18 +109,18 @@ class ChatbotController {
   // Enhanced message validation
   validateMessage(message) {
     if (!message || message.trim().length === 0) {
-      this.showNotification("Silakan masukkan pesan terlebih dahulu.", 'warning');
+      this.showNotification("Please enter a message first.", 'warning');
       return false;
     }
 
     if (message.length > this.config.maxMessageLength) {
-      this.showNotification(`Pesan terlalu panjang. Maksimal ${this.config.maxMessageLength} karakter.`, 'warning');
+      this.showNotification(`Message too long. Maximum ${this.config.maxMessageLength} characters.`, 'warning');
       return false;
     }
 
     // Basic spam detection
     if (this.isSpamMessage(message)) {
-      this.showNotification("Harap tunggu sebelum mengirim pesan lagi.", 'warning');
+      this.showNotification("Please wait before sending another message.", 'warning');
       return false;
     }
 
@@ -141,7 +141,7 @@ class ChatbotController {
   // Enhanced chat handling
   async handleChat() {
     if (this.isWaitingForResponse) {
-      this.showNotification("Sedang memproses pesan sebelumnya...", 'info');
+      this.showNotification("Processing previous message...", 'info');
       return;
     }
 
@@ -205,7 +205,7 @@ class ChatbotController {
       case 'wave':
         element.innerHTML = `
           <div class="typing-indicator-container">
-            <div class="typing-text">BSI UII sedang mengetik</div>
+            <div class="typing-text">BSI UII is typing</div>
             <div class="sound-wave">
               <div class="bar"></div>
               <div class="bar"></div>
@@ -220,7 +220,7 @@ class ChatbotController {
       case 'bubble':
         element.innerHTML = `
           <div class="typing-bubble">
-            <div class="typing-text">BSI UII sedang mengetik...</div>
+            <div class="typing-text">BSI UII is typing...</div>
           </div>
         `;
         break;
@@ -228,12 +228,7 @@ class ChatbotController {
       default: // 'dots'
         element.innerHTML = `
           <div class="typing-indicator-container">
-            <div class="typing-text">BSI UII sedang mengetik</div>
-            <div class="typing-dots">
-              <span class="dot"></span>
-              <span class="dot"></span>
-              <span class="dot"></span>
-            </div>
+            <div class="typing-text">BSI UII is typing...</div>
           </div>
         `;
     }
@@ -300,13 +295,13 @@ class ChatbotController {
       }
       
       const responseText = await response.text();
-      return responseText || "Maaf, saya tidak dapat memberikan respons saat ini.";
+      return responseText || "Sorry, I cannot provide a response at this time.";
       
     } catch (error) {
       clearTimeout(timeoutId);
       
       if (error.name === 'AbortError') {
-        throw new Error("Request timeout. Silakan coba lagi.");
+        throw new Error("Request timeout. Please try again.");
       }
       
       throw error;
@@ -316,21 +311,21 @@ class ChatbotController {
   async handleResponseError(messageParagraph, error) {
     messageParagraph.classList.add("error");
     
-    let errorMessage = "Terjadi kesalahan. ";
+    let errorMessage = "An error occurred. ";
     
     if (error.message.includes("timeout")) {
-      errorMessage += "Koneksi timeout. ";
+      errorMessage += "Connection timeout. ";
     } else if (error.message.includes("500")) {
       errorMessage += "Server error. ";
     } else if (!navigator.onLine) {
-      errorMessage += "Tidak ada koneksi internet. ";
+      errorMessage += "No internet connection. ";
     } else {
       errorMessage += error.message + " ";
     }
 
     // Add retry option if haven't exceeded max retries
     if (this.retryCount < this.maxRetries) {
-      errorMessage += `<button class="retry-btn" onclick="chatbot.retryLastMessage()">Coba Lagi (${this.maxRetries - this.retryCount})</button>`;
+      errorMessage += `<button class="retry-btn" onclick="chatbot.retryLastMessage()">Try Again (${this.maxRetries - this.retryCount})</button>`;
     }
 
     messageParagraph.innerHTML = errorMessage;
@@ -352,19 +347,128 @@ class ChatbotController {
   }
 
   // Typewriter effect for responses
-  async typewriterEffect(element, text, speed = 30) {
-    element.textContent = "";
+  // Parse markdown to HTML
+  parseMarkdown(text) {
+    let html = text;
     
-    for (let i = 0; i < text.length; i++) {
-      element.textContent += text.charAt(i);
+    // Process code blocks first to protect them from other parsing
+    const codeBlocks = [];
+    html = html.replace(/```([\s\S]*?)```/g, (match, code) => {
+      const placeholder = `__CODE_BLOCK_${codeBlocks.length}__`;
+      codeBlocks.push(`<pre><code>${code.trim()}</code></pre>`);
+      return placeholder;
+    });
+    
+    // Process inline code
+    const inlineCodes = [];
+    html = html.replace(/`([^`]+)`/g, (match, code) => {
+      const placeholder = `__INLINE_CODE_${inlineCodes.length}__`;
+      inlineCodes.push(`<code>${code}</code>`);
+      return placeholder;
+    });
+    
+    // Headers (#### Header)
+    html = html.replace(/^#### (.*$)/gm, '<h4>$1</h4>')
+               .replace(/^### (.*$)/gm, '<h3>$1</h3>')
+               .replace(/^## (.*$)/gm, '<h2>$1</h2>')
+               .replace(/^# (.*$)/gm, '<h1>$1</h1>');
+    
+    // Bold text (**text** or __text__)
+    html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+               .replace(/__(.*?)__/g, '<strong>$1</strong>');
+    
+    // Italic text (*text* or _text_) - more careful regex
+    html = html.replace(/\*([^*\n]+?)\*/g, '<em>$1</em>')
+               .replace(/_([^_\n]+?)_/g, '<em>$1</em>');
+    
+    // Links [text](url)
+    html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+    
+    // Horizontal rules (---)
+    html = html.replace(/^---$/gm, '<hr>');
+    
+    // Process lists
+    const lines = html.split('\n');
+    const processedLines = [];
+    let inList = false;
+    let listType = '';
+    
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].trim();
       
-      // Auto-scroll during typing
-      if (i % 10 === 0) {
-        this.scrollToBottom();
+      // Check for unordered list items
+      if (line.match(/^[-*+] (.+)$/)) {
+        if (!inList) {
+          processedLines.push('<ul>');
+          inList = true;
+          listType = 'ul';
+        } else if (listType !== 'ul') {
+          processedLines.push('</' + listType + '>');
+          processedLines.push('<ul>');
+          listType = 'ul';
+        }
+        processedLines.push('<li>' + line.replace(/^[-*+] /, '') + '</li>');
       }
-      
-      await new Promise(resolve => setTimeout(resolve, speed));
+      // Check for ordered list items
+      else if (line.match(/^\d+\. (.+)$/)) {
+        if (!inList) {
+          processedLines.push('<ol>');
+          inList = true;
+          listType = 'ol';
+        } else if (listType !== 'ol') {
+          processedLines.push('</' + listType + '>');
+          processedLines.push('<ol>');
+          listType = 'ol';
+        }
+        processedLines.push('<li>' + line.replace(/^\d+\. /, '') + '</li>');
+      }
+      // Not a list item
+      else {
+        if (inList) {
+          processedLines.push('</' + listType + '>');
+          inList = false;
+          listType = '';
+        }
+        processedLines.push(line);
+      }
     }
+    
+    // Close any remaining open list
+    if (inList) {
+      processedLines.push('</' + listType + '>');
+    }
+    
+    html = processedLines.join('\n');
+    
+    // Convert line breaks to <br> (but not around headers and lists)
+    html = html.replace(/\n/g, '<br>');
+    
+    // Clean up extra <br> tags around headers and lists
+    html = html.replace(/<br>\s*(<h[1-6]>)/g, '$1')
+               .replace(/(<\/h[1-6]>)\s*<br>/g, '$1')
+               .replace(/<br>\s*(<[uo]l>)/g, '$1')
+               .replace(/(<\/[uo]l>)\s*<br>/g, '$1')
+               .replace(/<br>\s*(<li>)/g, '$1')
+               .replace(/(<\/li>)\s*<br>/g, '$1');
+    
+    // Restore code blocks
+    codeBlocks.forEach((code, index) => {
+      html = html.replace(new RegExp(`__CODE_BLOCK_${index}__`, 'g'), code);
+    });
+    
+    // Restore inline codes
+    inlineCodes.forEach((code, index) => {
+      html = html.replace(new RegExp(`__INLINE_CODE_${index}__`, 'g'), code);
+    });
+    
+    return html;
+  }
+
+  async typewriterEffect(element, text, speed = 30) {
+    // Parse markdown and display immediately for better formatting
+    const htmlContent = this.parseMarkdown(text);
+    element.innerHTML = htmlContent;
+    this.scrollToBottom();
   }
 
   // Utility methods
@@ -462,7 +566,7 @@ class ChatbotController {
     const messages = this.chatMessagesContainer.querySelectorAll('.chat:not(:first-child)');
     messages.forEach(message => message.remove());
     
-    this.showNotification("Riwayat chat telah dihapus.", 'info');
+    this.showNotification("Chat history has been cleared.", 'info');
   }
 
   // Notification system
@@ -557,7 +661,7 @@ class ChatbotController {
           }, 3000);
         }, 1000);
       } else {
-        this.showNotification('Demo selesai! Pilih style favorit Anda.', 'info');
+        this.showNotification('Demo complete! Choose your favorite style.', 'info');
       }
     };
     
@@ -593,34 +697,6 @@ const additionalStyles = `
     font-weight: 400;
   }
 
-  .typing-dots {
-    display: flex;
-    align-items: center;
-    gap: 2px;
-  }
-
-  .typing-dots .dot {
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background-color: #06337b;
-    animation: typingBounce 1.4s infinite ease-in-out;
-  }
-
-  .typing-dots .dot:nth-child(1) { animation-delay: -0.32s; }
-  .typing-dots .dot:nth-child(2) { animation-delay: -0.16s; }
-  .typing-dots .dot:nth-child(3) { animation-delay: 0s; }
-
-  @keyframes typingBounce {
-    0%, 80%, 100% { 
-      transform: scale(0.8) translateY(0); 
-      opacity: 0.6; 
-    }
-    40% { 
-      transform: scale(1.1) translateY(-2px); 
-      opacity: 1; 
-    }
-  }
 
   /* Enhanced typing animation for message container */
   .chat.typing {
@@ -699,6 +775,119 @@ const additionalStyles = `
     background: linear-gradient(90deg, #f8f9fa, #e9ecef, #f8f9fa);
     background-size: 200% 100%;
     animation: messageShimmer 2s infinite;
+  }
+
+  /* Markdown Styling for AI Responses */
+  .chat.incoming p h1,
+  .chat.incoming p h2,
+  .chat.incoming p h3,
+  .chat.incoming p h4 {
+    color: #06337b;
+    margin: 12px 0 8px 0;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  .chat.incoming p h1 { font-size: 1.4em; }
+  .chat.incoming p h2 { font-size: 1.3em; }
+  .chat.incoming p h3 { font-size: 1.2em; }
+  .chat.incoming p h4 { font-size: 1.1em; }
+
+  .chat.incoming p strong {
+    font-weight: 600;
+    color: #06337b;
+  }
+
+  .chat.incoming p em {
+    font-style: italic;
+    color: #444;
+  }
+
+  .chat.incoming p a {
+    color: #06337b;
+    text-decoration: underline;
+    font-weight: 500;
+    transition: color 0.2s ease;
+  }
+
+  .chat.incoming p a:hover {
+    color: #044a8a;
+    text-decoration: none;
+  }
+
+  .chat.incoming p ul,
+  .chat.incoming p ol {
+    margin: 8px 0;
+    padding-left: 20px;
+  }
+
+  .chat.incoming p li {
+    margin: 4px 0;
+    line-height: 1.4;
+  }
+
+  .chat.incoming p ul li {
+    list-style-type: disc;
+  }
+
+  .chat.incoming p ol li {
+    list-style-type: decimal;
+  }
+
+  .chat.incoming p code {
+    background: #f5f5f5;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    color: #e83e8c;
+  }
+
+  .chat.incoming p pre {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    padding: 12px;
+    margin: 8px 0;
+    overflow-x: auto;
+  }
+
+  .chat.incoming p pre code {
+    background: none;
+    padding: 0;
+    color: #495057;
+    font-size: 0.85em;
+    line-height: 1.4;
+  }
+
+  .chat.incoming p br {
+    line-height: 1.6;
+  }
+
+  /* Better spacing and readability */
+  .chat.incoming p {
+    line-height: 1.6;
+    word-wrap: break-word;
+  }
+
+  .chat.incoming p p {
+    margin: 8px 0;
+  }
+
+  /* Horizontal line for sections */
+  .chat.incoming p hr {
+    border: none;
+    border-top: 1px solid #e0e0e0;
+    margin: 16px 0;
+  }
+
+  /* Better quote styling */
+  .chat.incoming p blockquote {
+    border-left: 4px solid #06337b;
+    padding-left: 12px;
+    margin: 8px 0;
+    font-style: italic;
+    color: #666;
   }
 
   @keyframes messageShimmer {

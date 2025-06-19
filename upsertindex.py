@@ -7,22 +7,22 @@ import os
 
 load_dotenv()
 
-# Ambil API key dari variabel lingkungan
-PINECONE_API_KEY = os.getenv('PINECONE_API_KEY')
+# Get API key from environment variables
+PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
 
-# Memuat dokumen PDF dari direktori data
+# Load PDF documents from data directory
 pdf_documents = read_file("data/")
 
-# Membagi dokumen ke dalam potongan-potongan teks
+# Split documents into text chunks
 document_chunks = text_splitter(pdf_documents)
 
-# Mengunduh embeddings dari OpenAI
+# Download embeddings from OpenAI
 openai_embeddings = download_openai_embeddings()
 
-# Inisialisasi client Pinecone
+# Initialize Pinecone client
 pinecone_client = Pinecone(api_key=PINECONE_API_KEY)
 
-# Membuat indeks Pinecone dengan spesifikasi yang ditentukan
+# Create Pinecone index with specified specifications
 pinecone_client.create_index(
     name="chatbot-index",
     dimension=3072,
@@ -30,9 +30,10 @@ pinecone_client.create_index(
     spec=ServerlessSpec(cloud="gcp", region="europe-west4")
 )
 
-# Membuat vector store dari dokumen-dokumen yang telah di-split
+# Create vector store from split documents
 pinecone_vector_store = PineconeVectorStore.from_documents(
     documents=document_chunks,
     index_name="chatbot-index",
     embedding=openai_embeddings
 )
+

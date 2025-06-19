@@ -13,11 +13,11 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0"
     />
-    <link rel="icon" href="/path/to/favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon" />
     <script src="/static/js/script.js" defer></script>
   </head>
   <body>
-    <!-- Tombol untuk membuka/tutup chatbot -->
+    <!-- Button to open/close chatbot -->
     <button class="chatbot-toggle-button">
       <span class="material-symbols-rounded">mode_comment</span>
       <span class="material-symbols-outlined">close</span>
@@ -26,24 +26,22 @@
     <div class="chatbot">
       <header>
         <h2>Chatbot | IT Support UII</h2>
-        <!-- Tombol untuk menutup chatbot -->
-        <span class="chatbot-close-button material-symbols-outlined"
-          >close</span
-        >
+        <!-- Button to close chatbot -->
+        <span class="chatbot-close-button material-symbols-outlined">close</span>
       </header>
 
-      <!-- Container untuk pesan-pesan chat -->
+      <!-- Container for chat messages -->
       <ul class="chat-messages animated-text">
         <li class="chat incoming">
           <span class="material-symbols-outlined">smart_toy</span>
-          <p>Halo Sobat UII 👋<br />Apakah Ada yang bisa saya bantu?</p>
+          <p>Halo Sobat UII 👋<br />Apakah ada yang bisa saya bantu?</p>
         </li>
       </ul>
 
-      <!-- Area input pesan -->
+      <!-- Message input area -->
       <div class="chat-input-area">
         <textarea
-          placeholder="Enter a message..."
+          placeholder="Masukkan pesan..."
           spellcheck="false"
           required
         ></textarea>
@@ -53,7 +51,7 @@
 
     <video autoplay muted loop class="video-background">
       <source src="/static/media/video.mp4" type="video/mp4" />
-      Browser Anda tidak mendukung tag video HTML5.
+      Your browser does not support the HTML5 video tag.
     </video>
   </body>
 </html>
