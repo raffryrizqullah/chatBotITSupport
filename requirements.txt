@@ -62,6 +62,8 @@ pydantic-settings
 pydantic_core
 Pygments
 pypdf
+unstructured
+pillow
 pytest
 pytest-asyncio
 pytest-benchmark

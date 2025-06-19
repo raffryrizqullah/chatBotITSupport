@@ -1,3 +1,10 @@
+import sys
+import os
+
+# Add project root to Python path
+project_root = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, project_root)
+
 from flask import Flask, request, render_template
 from config.settings import Config
 from src.core.embeddings import get_openai_embeddings

@@ -347,6 +347,53 @@ class ChatbotController {
   }
 
   // Typewriter effect for responses
+  // Smart URL processing with punctuation handling
+  processSmartURLs(text) {
+    // Enhanced URL regex that handles punctuation at the end
+    const urlRegex = /(https?:\/\/[^\s<>"{}|\\^`\[\]]+)/gi;
+    
+    return text.replace(urlRegex, (match) => {
+      // Clean URL by removing trailing punctuation
+      let cleanUrl = match;
+      let trailingPunctuation = '';
+      
+      // Common punctuation that should not be part of URL
+      const punctuationPattern = /([.,;:!?)]*)$/;
+      const punctuationMatch = cleanUrl.match(punctuationPattern);
+      
+      if (punctuationMatch && punctuationMatch[1]) {
+        trailingPunctuation = punctuationMatch[1];
+        cleanUrl = cleanUrl.slice(0, -trailingPunctuation.length);
+      }
+      
+      // Additional cleanup for common cases
+      while (cleanUrl.endsWith('.') || cleanUrl.endsWith(',') || 
+             cleanUrl.endsWith(';') || cleanUrl.endsWith(':') ||
+             cleanUrl.endsWith('!') || cleanUrl.endsWith('?') ||
+             cleanUrl.endsWith(')')) {
+        trailingPunctuation = cleanUrl.slice(-1) + trailingPunctuation;
+        cleanUrl = cleanUrl.slice(0, -1);
+      }
+      
+      // Validate that it's a proper URL
+      if (this.isValidURL(cleanUrl)) {
+        return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer" class="auto-link">${cleanUrl}</a>${trailingPunctuation}`;
+      }
+      
+      return match; // Return original if not valid URL
+    });
+  }
+  
+  // URL validation helper
+  isValidURL(string) {
+    try {
+      const url = new URL(string);
+      return url.protocol === 'http:' || url.protocol === 'https:';
+    } catch (_) {
+      return false;
+    }
+  }
+  
   // Parse markdown to HTML
   parseMarkdown(text) {
     let html = text;
@@ -381,7 +428,10 @@ class ChatbotController {
     html = html.replace(/\*([^*\n]+?)\*/g, '<em>$1</em>')
                .replace(/_([^_\n]+?)_/g, '<em>$1</em>');
     
-    // Links [text](url)
+    // Smart URL detection - detect URLs with punctuation handling
+    html = this.processSmartURLs(html);
+    
+    // Links [text](url) - markdown format
     html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
     
     // Horizontal rules (---)
@@ -775,6 +825,31 @@ const additionalStyles = `
     background: linear-gradient(90deg, #f8f9fa, #e9ecef, #f8f9fa);
     background-size: 200% 100%;
     animation: messageShimmer 2s infinite;
+  }
+
+  /* Auto-generated link styling */
+  .chat.incoming p a.auto-link {
+    color: #06337b;
+    text-decoration: underline;
+    font-weight: 500;
+    word-break: break-all;
+    transition: all 0.2s ease;
+    background: rgba(6, 51, 123, 0.05);
+    padding: 1px 3px;
+    border-radius: 3px;
+  }
+
+  .chat.incoming p a.auto-link:hover {
+    color: #044a8a;
+    background: rgba(6, 51, 123, 0.1);
+    text-decoration: none;
+    transform: translateY(-1px);
+  }
+
+  .chat.incoming p a.auto-link::before {
+    content: "🔗 ";
+    font-size: 0.8em;
+    opacity: 0.7;
   }
 
   /* Markdown Styling for AI Responses */
