@@ -830,8 +830,22 @@ const additionalStyles = `
     list-style-type: disc;
   }
 
+  .chat.incoming p ol {
+    counter-reset: item;
+  }
+
   .chat.incoming p ol li {
-    list-style-type: decimal;
+    display: block;
+    counter-increment: item;
+    list-style: none;
+    position: relative;
+  }
+
+  .chat.incoming p ol li::before {
+    content: counter(item) ". ";
+    font-weight: 600;
+    color: #06337b;
+    margin-right: 8px;
   }
 
   .chat.incoming p code {
