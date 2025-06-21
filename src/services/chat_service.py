@@ -37,4 +37,30 @@ class ChatService:
             if "System:" in full_answer
             else full_answer
         )
-        return final_answer.strip()
+        
+        # Additional cleanup to remove HTML artifacts
+        final_answer = self._clean_response_text(final_answer.strip())
+        
+        return final_answer
+    
+    def _clean_response_text(self, text):
+        """Clean response text from HTML artifacts and ensure proper formatting."""
+        import re
+        
+        # Remove HTML attributes that might leak into text
+        text = re.sub(r'target="_blank"[^>]*>', '', text, flags=re.IGNORECASE)
+        text = re.sub(r'rel="[^"]*"[^>]*>', '', text, flags=re.IGNORECASE)
+        text = re.sub(r'rel="noopener noreferrer"', '', text, flags=re.IGNORECASE)
+        
+        # Clean up orphaned HTML fragments
+        text = re.sub(r'>\s*([a-zA-Z0-9.-]+\.[a-zA-Z]{2,})', r' \1', text)
+        text = re.sub(r'([a-zA-Z0-9.-]+\.[a-zA-Z]{2,})\s*<', r'\1 ', text)
+        
+        # Remove broken HTML tags
+        text = re.sub(r'<[^>]*$', '', text)  # Remove incomplete tags at end
+        text = re.sub(r'^[^<]*>', '', text)  # Remove incomplete tags at start
+        
+        # Clean up extra whitespace
+        text = re.sub(r'\s+', ' ', text)
+        
+        return text.strip()

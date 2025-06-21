@@ -347,8 +347,11 @@ class ChatbotController {
   }
 
   // Typewriter effect for responses
-  // Smart URL processing with punctuation handling
+  // Smart URL processing with punctuation handling and HTML cleanup
   processSmartURLs(text) {
+    // First, clean any existing HTML artifacts that might interfere
+    text = this.cleanHtmlArtifacts(text);
+    
     // Enhanced URL regex that handles punctuation at the end
     const urlRegex = /(https?:\/\/[^\s<>"{}|\\^`\[\]]+)/gi;
     
@@ -356,6 +359,11 @@ class ChatbotController {
       // Clean URL by removing trailing punctuation
       let cleanUrl = match;
       let trailingPunctuation = '';
+      
+      // Remove any HTML attributes that might have been included
+      cleanUrl = cleanUrl.replace(/target="_blank".*?>/gi, '');
+      cleanUrl = cleanUrl.replace(/rel="[^"]*"/gi, '');
+      cleanUrl = cleanUrl.replace(/[<>]/g, '');
       
       // Common punctuation that should not be part of URL
       const punctuationPattern = /([.,;:!?)]*)$/;
@@ -384,6 +392,21 @@ class ChatbotController {
     });
   }
   
+  // New function to clean HTML artifacts
+  cleanHtmlArtifacts(text) {
+    // Remove orphaned HTML attributes that might appear in text
+    text = text.replace(/target="_blank"\s*/gi, '');
+    text = text.replace(/rel="noopener noreferrer"\s*/gi, '');
+    text = text.replace(/rel="[^"]*"\s*/gi, '');
+    text = text.replace(/>\s*([a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g, '$1');
+    
+    // Clean up broken HTML tags
+    text = text.replace(/<[^>]*>/g, ' ');
+    text = text.replace(/\s+/g, ' ');
+    
+    return text.trim();
+  }
+  
   // URL validation helper
   isValidURL(string) {
     try {
@@ -394,9 +417,10 @@ class ChatbotController {
     }
   }
   
-  // Parse markdown to HTML
+  // Parse markdown to HTML with enhanced cleaning
   parseMarkdown(text) {
-    let html = text;
+    // Clean the input text first
+    let html = this.cleanHtmlArtifacts(text);
     
     // Process code blocks first to protect them from other parsing
     const codeBlocks = [];
@@ -459,8 +483,8 @@ class ChatbotController {
         }
         processedLines.push('<li>' + line.replace(/^[-*+] /, '') + '</li>');
       }
-      // Check for ordered list items
-      else if (line.match(/^\d+\. (.+)$/)) {
+      // Check for ordered list items - improved pattern matching
+      else if (line.match(/^\d+\.\s+(.+)$/)) {
         if (!inList) {
           processedLines.push('<ol>');
           inList = true;
@@ -470,7 +494,9 @@ class ChatbotController {
           processedLines.push('<ol>');
           listType = 'ol';
         }
-        processedLines.push('<li>' + line.replace(/^\d+\. /, '') + '</li>');
+        // Extract content after number and dot, preserving formatting
+        const content = line.replace(/^\d+\.\s+/, '');
+        processedLines.push('<li>' + content + '</li>');
       }
       // Not a list item
       else {
@@ -511,7 +537,30 @@ class ChatbotController {
       html = html.replace(new RegExp(`__INLINE_CODE_${index}__`, 'g'), code);
     });
     
+    // Final cleanup to remove any remaining HTML artifacts
+    html = this.finalTextCleanup(html);
+    
     return html;
+  }
+  
+  // Final text cleanup to ensure clean display
+  finalTextCleanup(text) {
+    // Remove any remaining HTML attribute fragments
+    text = text.replace(/target="_blank"[^>]*>/gi, '');
+    text = text.replace(/rel="[^"]*"[^>]*>/gi, '');
+    
+    // Clean up malformed HTML
+    text = text.replace(/<([^>]+)([^>]*target="_blank"[^>]*)>/gi, '<$1>');
+    text = text.replace(/<([^>]+)([^>]*rel="[^"]*"[^>]*)>/gi, '<$1>');
+    
+    // Remove orphaned closing brackets and attributes
+    text = text.replace(/>\s*([a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g, ' $1');
+    text = text.replace(/([a-zA-Z0-9.-]+\.[a-zA-Z]{2,})\s*</g, '$1 ');
+    
+    // Clean up extra spaces
+    text = text.replace(/\s+/g, ' ');
+    
+    return text.trim();
   }
 
   async typewriterEffect(element, text, speed = 30) {
@@ -906,21 +955,25 @@ const additionalStyles = `
   }
 
   .chat.incoming p ol {
-    counter-reset: item;
+    counter-reset: list-counter;
+    padding-left: 0;
   }
 
   .chat.incoming p ol li {
     display: block;
-    counter-increment: item;
+    counter-increment: list-counter;
     list-style: none;
     position: relative;
+    margin-left: 20px;
   }
 
   .chat.incoming p ol li::before {
-    content: counter(item) ". ";
+    content: counter(list-counter) ". ";
     font-weight: 600;
     color: #06337b;
     margin-right: 8px;
+    position: absolute;
+    left: -20px;
   }
 
   .chat.incoming p code {

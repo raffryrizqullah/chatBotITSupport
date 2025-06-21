@@ -62,8 +62,12 @@ pydantic-settings
 pydantic_core
 Pygments
 pypdf
-unstructured
+unstructured[pdf]
 pillow
+PyMuPDF
+pdfplumber
+camelot-py[cv]
+pytesseract
 pytest
 pytest-asyncio
 pytest-benchmark
